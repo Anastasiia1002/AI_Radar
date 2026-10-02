@@ -23,6 +23,8 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 3000,
+    // Dev tunnels (for example trycloudflare.com) are not localhost.
+    allowedHosts: true,
     proxy: freeserpProxy,
   },
   preview: {
