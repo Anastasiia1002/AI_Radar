@@ -37,6 +37,17 @@ export function buildSearchUrl(params: SearchParams, baseUrl = freeserpBaseUrl()
   return appendQuery(endpoint(baseUrl), query)
 }
 
+const CORS_RELAYS: readonly ((url: string) => string)[] = [
+  (url) => `https://proxy.cors.dev/${url}`,
+  (url) => `https://cors.raghu.workers.dev/?url=${encodeURIComponent(url)}`,
+]
+
+export function indexTransportUrls(url: string, browser = typeof window !== 'undefined'): string[] {
+  if (!browser) return [url]
+  if (!/^https:\/\/(?:www\.)?freeserp\.ai\//.test(url)) return [url]
+  return CORS_RELAYS.map((relay) => relay(url))
+}
+
 export function searchCacheKey(params: SearchParams, baseUrl = freeserpBaseUrl()): string {
   return appendQuery(endpoint(baseUrl), buildSearchQuery(params))
 }
@@ -59,23 +70,46 @@ function failureFromBody(body: unknown, status: number): FreeSerpError {
   return new FreeSerpError('api', `FreeSERP request failed (${code}).`, status)
 }
 
+function isFreeSerpBody(body: unknown): body is Record<string, unknown> {
+  return isRecord(body) && typeof body.ok === 'boolean'
+}
+
 async function requestJson(url: string, signal: AbortSignal, fetchImpl: typeof fetch): Promise<unknown> {
-  let response: Response
-  try {
-    response = await fetchImpl(url, {
-      method: 'GET',
-      signal,
-      headers: { Accept: 'application/json' },
-    })
-  } catch (error) {
-    if (isAbortError(error)) throw new FreeSerpError('aborted', 'The request was aborted.')
-    throw new FreeSerpError('network', 'The network request to the AI index failed.')
+  const targets = indexTransportUrls(url)
+  let lastError = new FreeSerpError('network', 'The network request to the AI index failed.')
+
+  for (const target of targets) {
+    let response: Response
+    try {
+      response = await fetchImpl(target, {
+        method: 'GET',
+        signal,
+        headers: { Accept: 'application/json' },
+      })
+    } catch (error) {
+      if (isAbortError(error)) throw new FreeSerpError('aborted', 'The request was aborted.')
+      lastError = new FreeSerpError('network', 'The network request to the AI index failed.')
+      continue
+    }
+
+    let body: unknown
+    try {
+      body = await readJson(response)
+    } catch (error) {
+      if (signal.aborted || isAbortError(error)) throw new FreeSerpError('aborted', 'The request was aborted.')
+      if (error instanceof FreeSerpError) lastError = error
+      continue
+    }
+
+    if (!isFreeSerpBody(body)) {
+      lastError = new FreeSerpError('invalid', 'The index returned a response that was not JSON.', response.status)
+      continue
+    }
+    if (!response.ok || body.ok !== true) throw failureFromBody(body, response.status)
+    return body
   }
 
-  const body = await readJson(response)
-  if (!response.ok) throw failureFromBody(body, response.status)
-  if (!isRecord(body) || body.ok !== true) throw failureFromBody(body, response.status)
-  return body
+  throw lastError
 }
 
 async function loadSearch(params: SearchParams, signal: AbortSignal, fetchImpl: typeof fetch): Promise<SearchResult> {

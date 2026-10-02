@@ -25,8 +25,9 @@ function devBrowser(): boolean {
 export function freeserpBaseUrl(): string {
   const configured = readViteEnv(() => import.meta.env.VITE_FREESERP_BASE_URL)
   if (configured) return configured
-  // The dev server proxies /freeserp. Browsers reject FreeSERP's duplicated
-  // Access-Control-Allow-Origin header, so a static host calls the API directly.
+  // The dev server proxies /freeserp. Production still names the FreeSERP
+  // endpoint here; the browser transport relays it, because FreeSERP sends
+  // Access-Control-Allow-Origin twice and browsers reject that response.
   if (devBrowser()) return PROXY_BASE_URL
   return DIRECT_BASE_URL
 }

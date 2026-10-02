@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { clearRequestCache } from '../src/api/cache.ts'
 import { FreeSerpError } from '../src/api/errors.ts'
-import { buildSearchUrl, fetchIndexSnapshot, lookupSite, searchSites } from '../src/api/freeserp.ts'
+import { buildSearchUrl, fetchIndexSnapshot, indexTransportUrls, lookupSite, searchSites } from '../src/api/freeserp.ts'
 import { normalizeSite } from '../src/api/normalizers.ts'
 import {
   buildSearchQuery,
@@ -257,6 +257,13 @@ async function main(): Promise<void> {
   assert.ok(liveSite)
   assertModel(liveSite)
   assert.equal(buildSearchUrl(sampleParams('')).includes('niche='), false)
+  const directVoice = buildSearchUrl(sampleParams('voice agent'))
+  assert.deepEqual(indexTransportUrls(directVoice, false), [directVoice])
+  assert.deepEqual(indexTransportUrls(directVoice, true), [
+    `https://proxy.cors.dev/${directVoice}`,
+    `https://cors.raghu.workers.dev/?url=${encodeURIComponent(directVoice)}`,
+  ])
+  assert.deepEqual(indexTransportUrls('/freeserp?q=voice', true), ['/freeserp?q=voice'])
   const proxied = new URL(buildSearchUrl(sampleParams('voice agent'), '/freeserp'), 'http://localhost')
   assert.equal(proxied.pathname, '/freeserp')
   assert.equal(proxied.searchParams.get('index'), 'sites')

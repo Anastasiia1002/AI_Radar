@@ -66,7 +66,7 @@ https://anastasiia1002.github.io/AI_Radar/
 
 Pages is set to publish the `main` branch. The live `index.html` loads the built files in `assets/`, because GitHub does not run Vite. `index.source.html` stays the entry used by the dev server and `npm run build`.
 
-GitHub Pages is static, so the browser calls `https://freeserp.ai/api.php` directly. Local development still uses the `/freeserp` proxy, because FreeSERP currently sends `Access-Control-Allow-Origin` twice and browsers reject that response.
+GitHub Pages is static. FreeSERP currently sends `Access-Control-Allow-Origin` twice (`*, *`), and browsers block that response even when the status is 200. The page still builds the FreeSERP URL, then reads it through `https://proxy.cors.dev/` (and `https://cors.raghu.workers.dev/` if the first relay fails). The relay only carries the same index response. Local development still uses the `/freeserp` proxy.
 
 ## Run locally
 
