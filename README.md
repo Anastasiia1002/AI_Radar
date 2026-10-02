@@ -64,7 +64,7 @@ Public URL, after Pages is turned on in the repository settings:
 
 https://anastasiia1002.github.io/AI_Radar/
 
-`.github/workflows/pages.yml` builds on every push to `main`. Pages has to use **GitHub Actions** as the source before that workflow can publish. The `gh-pages` branch contains a built copy of the site for the **Deploy from a branch** option (`gh-pages` / root).
+Pages is set to publish the `main` branch. The live `index.html` loads the built files in `assets/`, because GitHub does not run Vite. `index.source.html` stays the entry used by the dev server and `npm run build`.
 
 GitHub Pages is static, so the browser calls `https://freeserp.ai/api.php` directly. Local development still uses the `/freeserp` proxy, because FreeSERP currently sends `Access-Control-Allow-Origin` twice and browsers reject that response.
 
