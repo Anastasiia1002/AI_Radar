@@ -10,6 +10,9 @@ import {
   urlToFilterState,
 } from '../src/api/params.ts'
 import { analyzeSites } from '../src/compare/analyze.ts'
+import { sharedCategoryNames } from '../src/compare/signals.ts'
+import { categoryBars } from '../src/niches/distribution.ts'
+import { nicheExplorePath } from '../src/niches/catalog.ts'
 import type { AiRadarSite, FilterState, SearchParams } from '../src/types/site.ts'
 
 const MODEL_KEYS = [
@@ -107,6 +110,22 @@ function assertComparisonNotes(): void {
   assert.match(text, /alpha\.example React/)
   assert.match(text, /beta\.example none/)
   assert.doesNotMatch(text, /winner/i)
+
+  const bars = categoryBars([
+    { name: 'Image Generation', count: 100 },
+    { name: 'Video Generation', count: 25 },
+  ])
+  assert.equal(bars[0]?.width, 100)
+  assert.equal(bars[1]?.width, 25)
+  assert.equal(Math.round(bars[0]?.listedShare ?? 0), 80)
+  assert.equal(nicheExplorePath('Image Generation'), '/explore?niche=Image+Generation')
+  assert.deepEqual(
+    sharedCategoryNames([
+      siteFixture('a.example', { categories: ['Image Generation', 'Agents'] }),
+      siteFixture('b.example', { categories: ['Image Generation'] }),
+    ]),
+    ['Image Generation'],
+  )
 }
 
 async function main(): Promise<void> {

@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom'
-import { PRIORITY_NICHES } from '@/types/site'
 
 export function HomePage() {
   return (
@@ -16,17 +15,11 @@ export function HomePage() {
           Niches
         </h2>
         <p className="mt-2 max-w-lg text-muted">
-          Browse the AI index by a category FreeSERP assigns. Counts are not shown here.
+          The landscape maps FreeSERP categories and the indexed counts behind them.
         </p>
-        <ul className="mt-6 flex flex-wrap gap-2">
-          {PRIORITY_NICHES.map((niche) => (
-            <li key={niche}>
-              <Link className="btn btn-secondary" to={`/explore?niche=${encodeURIComponent(niche)}`}>
-                {niche}
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <Link className="btn btn-secondary mt-6" to="/niches">
+          Explore the AI landscape
+        </Link>
       </section>
     </div>
   )

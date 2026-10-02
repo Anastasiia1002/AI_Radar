@@ -118,6 +118,62 @@
     box-shadow: 0 0 0 3px rgba(224, 177, 90, 0.16);
   }
 
+  .index-live {
+    animation: index-pulse 2.4s ease-in-out infinite;
+  }
+
+  .specimen {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+    background: var(--color-surface);
+    transition:
+      border-color 160ms ease,
+      transform 160ms ease;
+  }
+
+  .specimen::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 2px;
+    width: 1.25rem;
+    background: transparent;
+    transition:
+      width 160ms ease,
+      background-color 160ms ease;
+  }
+
+  .specimen:hover,
+  .specimen:focus-visible {
+    border-color: var(--color-line-strong);
+    transform: translateY(-2px);
+  }
+
+  .specimen:hover::before,
+  .specimen:focus-visible::before {
+    width: 100%;
+    background: var(--color-accent);
+  }
+
+  .signal-track {
+    height: 2px;
+    background: rgba(243, 241, 236, 0.08);
+  }
+
+  .signal-value {
+    height: 2px;
+    transform-origin: left center;
+    background: var(--color-accent);
+    animation: signal-fill 640ms ease both;
+  }
+
+  .rise {
+    animation: rise-in 180ms ease both;
+  }
+
   .btn {
     display: inline-flex;
     align-items: center;
@@ -196,6 +252,36 @@
     border-radius: var(--radius-card);
     background: var(--color-surface);
     padding: 1.25rem 1.25rem 1.1rem;
+  }
+}
+
+@keyframes index-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 3px rgba(224, 177, 90, 0.16);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(224, 177, 90, 0.04);
+  }
+}
+
+@keyframes signal-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
 

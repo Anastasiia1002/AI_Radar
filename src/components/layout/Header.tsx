@@ -44,12 +44,9 @@ export function Header() {
           <NavLink className={({ isActive }) => navClass(isActive)} to="/explore">
             Explore
           </NavLink>
-          <Link
-            className="text-sm font-medium text-muted transition-colors duration-150 hover:text-text"
-            to="/#niches"
-          >
+          <NavLink className={({ isActive }) => navClass(isActive)} to="/niches">
             Niches
-          </Link>
+          </NavLink>
           <NavLink
             className={({ isActive }) => navClass(isActive)}
             to="/compare"

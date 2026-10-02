@@ -4,6 +4,7 @@ import { CompareProvider } from '@/hooks/useCompare'
 import { ComparePage } from '@/pages/ComparePage'
 import { ExplorePage } from '@/pages/ExplorePage'
 import { HomePage } from '@/pages/HomePage'
+import { NichesPage } from '@/pages/NichesPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { ToolPage } from '@/pages/ToolPage'
 
@@ -21,6 +22,7 @@ export function AppRouter() {
           <Route element={<PageShell />}>
             <Route index element={<HomePage />} />
             <Route path="explore" element={<ExplorePage />} />
+            <Route path="niches" element={<NichesPage />} />
             <Route path="tool/*" element={<ToolPage />} />
             <Route path="compare" element={<ComparePage />} />
             <Route path="*" element={<NotFoundPage />} />

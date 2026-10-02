@@ -53,10 +53,11 @@ Routes:
 
 | Path | Behavior |
 | --- | --- |
-| `/` | Discovery intro and niche links. It does not wait on index feeds. |
+| `/` | Discovery intro. It does not wait on index feeds. |
+| `/niches` | Category map from the FreeSERP stats snapshot. Counts are indexed coverage, not market share. |
 | `/explore` | Lists indexed homepages. Sort, niche, Domain Rating, confirmed-live date, and page come from the URL. |
 | `/tool/*` | Domain from the path. Shows the indexed fields when that exact domain is in the AI slice. |
-| `/compare` | Up to 3 selected websites. Notes compare indexed fields and the stored AI summaries. No winner. |
+| `/compare` | Up to 3 selected websites. Compares indexed fields, category overlap, and index dates. No winner. |
 
 ## GitHub Pages
 
