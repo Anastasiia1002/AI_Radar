@@ -9,13 +9,9 @@ type SiteCardProps = {
   onCategory: (category: string) => void
 }
 
-function sameDomain(left: string, right: string): boolean {
-  return left.trim().toLowerCase() === right.trim().toLowerCase()
-}
-
 export function SiteCard({ site, onCategory }: SiteCardProps) {
   const compare = useCompare()
-  const selected = compare.domains.some((domain) => sameDomain(domain, site.domain))
+  const selected = compare.has(site.domain)
   const heading = site.title ?? site.domain
 
   return (
@@ -81,15 +77,11 @@ export function SiteCard({ site, onCategory }: SiteCardProps) {
           disabled={!selected && compare.isFull}
           aria-pressed={selected}
           onClick={() => {
-            if (selected) {
-              const stored = compare.domains.find((domain) => sameDomain(domain, site.domain))
-              compare.remove(stored ?? site.domain)
-              return
-            }
-            compare.add(site.domain)
+            if (selected) compare.remove(site.domain)
+            else compare.add(site.domain)
           }}
         >
-          {selected ? 'Remove' : 'Compare'}
+          {selected ? 'In compare' : 'Add to compare'}
         </button>
         {site.url ? (
           <a className="btn btn-secondary" href={site.url} target="_blank" rel="noreferrer">

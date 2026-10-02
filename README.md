@@ -2,7 +2,7 @@
 
 Find the AI tools you didn't know existed.
 
-AI Radar is a discovery interface over a live index of AI websites. It searches FreeSERP’s homepage index instead of a hand-maintained directory. Explore lists the indexed fields and filters them from the URL. A comparison table is not part of this build.
+AI Radar is a discovery interface over a live index of AI websites. It searches FreeSERP’s homepage index instead of a hand-maintained directory. Explore lists the indexed fields and filters them from the URL. Compare lines up to three selected websites and notes where those indexed fields differ.
 
 ## Audience
 
@@ -56,7 +56,7 @@ Routes:
 | `/` | Discovery intro and niche links. It does not wait on index feeds. |
 | `/explore` | Lists indexed homepages. Sort, niche, Domain Rating, confirmed-live date, and page come from the URL. |
 | `/tool/*` | Domain from the path. Shows the indexed fields when that exact domain is in the AI slice. |
-| `/compare` | Up to 3 selected domains, stored locally. No scores or winner. |
+| `/compare` | Up to 3 selected websites. Notes compare indexed fields and the stored AI summaries. No winner. |
 
 ## GitHub Pages
 

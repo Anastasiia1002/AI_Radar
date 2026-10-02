@@ -12,7 +12,7 @@ export function ToolPage() {
   const domain = decodeRouteDomain(params['*'])
   const { status, site, error, reload } = useSite(domain)
   const compare = useCompare()
-  const selected = site ? compare.domains.some((item) => item.toLowerCase() === site.domain.toLowerCase()) : false
+  const selected = site ? compare.has(site.domain) : false
 
   return (
     <div className="shell-container py-12">
@@ -100,15 +100,11 @@ export function ToolPage() {
                 disabled={!selected && compare.isFull}
                 aria-pressed={selected}
                 onClick={() => {
-                  if (selected) {
-                    const stored = compare.domains.find((item) => item.toLowerCase() === site.domain.toLowerCase())
-                    compare.remove(stored ?? site.domain)
-                    return
-                  }
-                  compare.add(site.domain)
+                  if (selected) compare.remove(site.domain)
+                  else compare.add(site.domain)
                 }}
               >
-                {selected ? 'Remove from compare' : 'Compare'}
+                {selected ? 'In compare' : 'Add to compare'}
               </button>
               {site.url ? (
                 <a className="btn btn-primary" href={site.url} target="_blank" rel="noreferrer">

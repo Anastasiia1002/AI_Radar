@@ -9,6 +9,7 @@ import {
   filterStateToUrlSearch,
   urlToFilterState,
 } from '../src/api/params.ts'
+import { analyzeSites } from '../src/compare/analyze.ts'
 import type { AiRadarSite, FilterState, SearchParams } from '../src/types/site.ts'
 
 const MODEL_KEYS = [
@@ -59,7 +60,57 @@ const okBody = {
   results: [{ domain: 'a.test', title: 'A', url: 'https://a.test' }],
 }
 
+function siteFixture(domain: string, patch: Partial<AiRadarSite>): AiRadarSite {
+  return {
+    domain,
+    url: null,
+    title: null,
+    summary: null,
+    categories: [],
+    broadCategory: null,
+    technologySignal: null,
+    domainRating: null,
+    confirmedLive: null,
+    firstSeen: null,
+    lastFetched: null,
+    tld: null,
+    httpStatus: null,
+    ...patch,
+  }
+}
+
+function assertComparisonNotes(): void {
+  assert.deepEqual(analyzeSites([siteFixture('only.example', { categories: ['Image Generation'] })]), [])
+  const notes = analyzeSites([
+    siteFixture('alpha.example', {
+      categories: ['Image Generation', 'Image Editing'],
+      domainRating: 20,
+      confirmedLive: '2026-01-02',
+      firstSeen: '2026-01-01',
+      technologySignal: 'react',
+    }),
+    siteFixture('beta.example', {
+      categories: ['Image Generation'],
+      domainRating: 80,
+      confirmedLive: '2026-08-01',
+      firstSeen: '2026-01-01',
+      technologySignal: null,
+    }),
+  ])
+  const text = notes.join('\n')
+  assert.match(text, /Every selected website is tagged Image Generation/)
+  assert.match(text, /Image Editing is tagged only on alpha\.example/)
+  assert.match(text, /beta\.example has the highest Domain Rating in this selection \(80\)/)
+  assert.match(text, /not a product score/)
+  assert.match(text, /beta\.example has the latest confirmed live date/)
+  assert.match(text, /Added-to-index date is the same/)
+  assert.match(text, /alpha\.example React/)
+  assert.match(text, /beta\.example none/)
+  assert.doesNotMatch(text, /winner/i)
+}
+
 async function main(): Promise<void> {
+  assertComparisonNotes()
   const filters: FilterState = {
     query: 'video editor',
     niche: 'Image Generation',

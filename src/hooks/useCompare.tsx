@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
+import { sameDomain } from '@/utils/domain'
 
 const STORAGE_KEY = 'ai-radar:compare'
 export const MAX_COMPARE = 3
@@ -54,19 +55,19 @@ export function CompareProvider({ children }: { children: ReactNode }) {
     return {
       domains,
       isFull: domains.length >= MAX_COMPARE,
-      has: (domain) => domains.includes(domain.trim()),
+      has: (domain) => domains.some((item) => sameDomain(item, domain)),
       add: (domain) => {
         const next = domain.trim()
-        if (next === '' || domains.includes(next) || domains.length >= MAX_COMPARE) return false
+        if (next === '' || domains.some((item) => sameDomain(item, next)) || domains.length >= MAX_COMPARE) return false
         setDomains((current) => {
-          if (current.includes(next) || current.length >= MAX_COMPARE) return current
+          if (current.some((item) => sameDomain(item, next)) || current.length >= MAX_COMPARE) return current
           return [...current, next]
         })
         return true
       },
       remove: (domain) => {
         const next = domain.trim()
-        setDomains((current) => current.filter((item) => item !== next))
+        setDomains((current) => current.filter((item) => !sameDomain(item, next)))
       },
       clear: () => setDomains([]),
     }
