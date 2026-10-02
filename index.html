@@ -20,6 +20,21 @@
     />
   </head>
   <body>
+    <script>
+      // Restore the path after GitHub Pages serves 404.html for a client route.
+      ;(function (locationRef) {
+        if (locationRef.search[1] === '/') {
+          var decoded = locationRef.search
+            .slice(1)
+            .split('&')
+            .map(function (part) {
+              return part.replace(/~and~/g, '&')
+            })
+            .join('?')
+          window.history.replaceState(null, '', locationRef.pathname.slice(0, -1) + decoded + locationRef.hash)
+        }
+      })(window.location)
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

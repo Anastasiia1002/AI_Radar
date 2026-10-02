@@ -13,7 +13,14 @@ const freeserpProxy: Record<string, ProxyOptions> = {
   },
 }
 
+function siteBase(): string {
+  if (process.env.GITHUB_PAGES !== 'true') return '/'
+  const repo = process.env.GITHUB_REPOSITORY?.split('/')[1] || 'AI_Radar'
+  return `/${repo}/`
+}
+
 export default defineConfig({
+  base: siteBase(),
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {

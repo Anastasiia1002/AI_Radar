@@ -7,9 +7,15 @@ import { HomePage } from '@/pages/HomePage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { ToolPage } from '@/pages/ToolPage'
 
+function routerBasename(): string | undefined {
+  const base = import.meta.env.BASE_URL
+  if (!base || base === '/') return undefined
+  return base.endsWith('/') ? base.slice(0, -1) : base
+}
+
 export function AppRouter() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={routerBasename()}>
       <CompareProvider>
         <Routes>
           <Route element={<PageShell />}>

@@ -58,6 +58,16 @@ Routes:
 | `/tool/*` | Domain from the path. Confirms whether that exact domain is in the AI slice. |
 | `/compare` | Empty state for a comparison list of up to 3 domains, stored locally. |
 
+## GitHub Pages
+
+The site is published from this repository:
+
+https://anastasiia1002.github.io/AI_Radar/
+
+`.github/workflows/pages.yml` builds on every push to `main` and deploys with GitHub Actions. In the repository settings, Pages must use **GitHub Actions** as the source. A `gh-pages` branch also contains the built site if Pages is set to deploy from that branch instead.
+
+GitHub Pages is static, so the browser calls `https://freeserp.ai/api.php` directly. Local development still uses the `/freeserp` proxy, because FreeSERP currently sends `Access-Control-Allow-Origin` twice and browsers reject that response.
+
 ## Run locally
 
 ```bash
@@ -81,7 +91,7 @@ No secrets. Both variables are optional.
 
 | Variable | Default |
 | --- | --- |
-| `VITE_FREESERP_BASE_URL` | `/freeserp` in the browser, `https://freeserp.ai/api.php` in Node |
+| `VITE_FREESERP_BASE_URL` | `/freeserp` in the dev server, `https://freeserp.ai/api.php` for production and Node |
 | `VITE_FREESERP_AGENT` | `AI-Radar/0.1` |
 
 `agent` identifies this app to FreeSERP and does not change results. See `.env.example`.
