@@ -2,7 +2,7 @@
 
 Find the AI tools you didn't know existed.
 
-AI Radar is a discovery interface over a live index of AI websites. It searches FreeSERP’s homepage index instead of a hand-maintained directory. The current build is the application foundation: design system, shell, routing, and the typed API layer. Discovery cards, filters, detail research, and comparison UI are the next product surfaces.
+AI Radar is a discovery interface over a live index of AI websites. It searches FreeSERP’s homepage index instead of a hand-maintained directory. Explore lists the indexed fields and filters them from the URL. A comparison table is not part of this build.
 
 ## Audience
 
@@ -44,19 +44,19 @@ FreeSERP JSON
   → src/api/normalizers.ts   AiRadarSite
   → src/api/params.ts        FilterState ↔ URL ↔ SearchParams
   → hooks                    useSearch, useSite, useCompare, useIndexSnapshot
-  → shell and route placeholders
+  → Explore list, filters, and website record
 ```
 
 Explore state lives in the URL (`q`, `niche`, `sort`, `dr`, `after`, `page`). Identical in-flight searches share one request. Successful responses are cached for 45 seconds. The cache key includes every parameter that changes the body, and aborted requests are not stored. Stats snapshots, when used, cache for 30 minutes and fall back to a documented 2 Oct 2026 snapshot labeled `source: "fallback"`.
 
 Routes:
 
-| Path | Foundation behavior |
+| Path | Behavior |
 | --- | --- |
-| `/` | Discovery intro. It does not wait on index feeds. |
-| `/explore` | Reads the URL, requests the live index, shows the count or an empty/error state. |
-| `/tool/*` | Domain from the path. Confirms whether that exact domain is in the AI slice. |
-| `/compare` | Empty state for a comparison list of up to 3 domains, stored locally. |
+| `/` | Discovery intro and niche links. It does not wait on index feeds. |
+| `/explore` | Lists indexed homepages. Sort, niche, Domain Rating, confirmed-live date, and page come from the URL. |
+| `/tool/*` | Domain from the path. Shows the indexed fields when that exact domain is in the AI slice. |
+| `/compare` | Up to 3 selected domains, stored locally. No scores or winner. |
 
 ## GitHub Pages
 

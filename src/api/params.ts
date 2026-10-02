@@ -2,8 +2,8 @@ import type { ApiSort, FilterState, SearchParams, SortKey } from '../types/site.
 import { SORT_KEYS } from '../types/site.ts'
 
 export const PAGE_SIZE = 24
-const MAX_WINDOW = 10_000
-const MAX_PAGE = Math.floor((MAX_WINDOW - PAGE_SIZE) / PAGE_SIZE) + 1
+export const RESULT_WINDOW = 10_000
+export const MAX_PAGE = Math.floor((RESULT_WINDOW - PAGE_SIZE) / PAGE_SIZE) + 1
 
 const SORT_TO_API: Record<SortKey, { sort: ApiSort; order: 'asc' | 'desc' }> = {
   relevance: { sort: 'relevance', order: 'desc' },
@@ -152,7 +152,7 @@ export function buildSearchQuery(params: SearchParams): URLSearchParams {
 
   const size = Math.min(100, Math.max(1, Math.round(params.size)))
   let from = Math.max(0, Math.round(params.from))
-  if (from + size > MAX_WINDOW) from = Math.max(0, MAX_WINDOW - size)
+  if (from + size > RESULT_WINDOW) from = Math.max(0, RESULT_WINDOW - size)
 
   query.set('sort', params.sort)
   query.set('order', params.order === 'asc' ? 'asc' : 'desc')

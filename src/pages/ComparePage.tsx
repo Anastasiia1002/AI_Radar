@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { MAX_COMPARE, useCompare } from '@/hooks/useCompare'
+import { toolPath } from '@/utils/domain'
 
 export function ComparePage() {
-  const { domains } = useCompare()
+  const { domains, remove } = useCompare()
 
   return (
     <div className="shell-container py-12">
@@ -21,9 +22,26 @@ export function ComparePage() {
             }
           />
         ) : (
-          <p className="font-mono text-sm text-muted">
-            {domains.length} of {MAX_COMPARE} selected.
-          </p>
+          <div>
+            <p className="font-mono text-sm text-muted">
+              {domains.length} of {MAX_COMPARE} selected.
+            </p>
+            <ul className="mt-4 grid gap-2">
+              {domains.map((domain) => (
+                <li
+                  key={domain}
+                  className="flex flex-wrap items-center justify-between gap-3 rounded-card border border-line bg-surface px-4 py-3"
+                >
+                  <Link className="font-mono text-sm hover:text-accent" to={toolPath(domain)}>
+                    {domain}
+                  </Link>
+                  <button className="btn btn-secondary" type="button" onClick={() => remove(domain)}>
+                    Remove
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
       </div>
     </div>
