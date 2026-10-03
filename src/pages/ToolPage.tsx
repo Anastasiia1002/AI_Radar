@@ -6,6 +6,7 @@ import { useCompare } from '@/hooks/useCompare'
 import { useSite } from '@/hooks/useSite'
 import { decodeRouteDomain } from '@/utils/domain'
 import { formatIndexDate, technologySignalLabel } from '@/utils/format'
+import { displayTld } from '@/compare/signals'
 
 export function ToolPage() {
   const params = useParams()
@@ -50,44 +51,44 @@ export function ToolPage() {
                   </li>
                 ))}
               </ul>
-            ) : null}
+            ) : (
+              <p className="mt-4 text-sm text-muted">No category detected</p>
+            )}
             <dl className="mt-6 grid gap-3 border-t border-line pt-4 text-sm sm:grid-cols-2">
-              {site.domainRating != null ? (
-                <div>
-                  <dt className="text-muted">Domain Rating</dt>
-                  <dd className="font-mono text-text">{site.domainRating}</dd>
-                </div>
-              ) : null}
-              {site.confirmedLive ? (
-                <div>
-                  <dt className="text-muted">Confirmed live</dt>
-                  <dd className="font-mono text-text">{formatIndexDate(site.confirmedLive)}</dd>
-                </div>
-              ) : null}
-              {site.firstSeen ? (
-                <div>
-                  <dt className="text-muted">Added to the index</dt>
-                  <dd className="font-mono text-text">{formatIndexDate(site.firstSeen)}</dd>
-                </div>
-              ) : null}
-              {site.lastFetched ? (
-                <div>
-                  <dt className="text-muted">Last fetched</dt>
-                  <dd className="font-mono text-text">{formatIndexDate(site.lastFetched)}</dd>
-                </div>
-              ) : null}
-              {site.technologySignal ? (
-                <div>
-                  <dt className="text-muted">Technology signal</dt>
-                  <dd className="text-text">{technologySignalLabel(site.technologySignal)}</dd>
-                </div>
-              ) : null}
-              {site.httpStatus != null ? (
-                <div>
-                  <dt className="text-muted">HTTP status</dt>
-                  <dd className="font-mono text-text">{site.httpStatus}</dd>
-                </div>
-              ) : null}
+              <div>
+                <dt className="text-muted">Domain Rating</dt>
+                <dd className="font-mono text-text">{site.domainRating == null ? 'Not available' : site.domainRating}</dd>
+              </div>
+              <div>
+                <dt className="text-muted">Confirmed live</dt>
+                <dd className="font-mono text-text">
+                  {site.confirmedLive ? formatIndexDate(site.confirmedLive) : 'Not available'}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-muted">First indexed</dt>
+                <dd className="font-mono text-text">{site.firstSeen ? formatIndexDate(site.firstSeen) : 'Not available'}</dd>
+              </div>
+              <div>
+                <dt className="text-muted">Last fetched</dt>
+                <dd className="font-mono text-text">
+                  {site.lastFetched ? formatIndexDate(site.lastFetched) : 'Not available'}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-muted">Technology signal</dt>
+                <dd className="text-text">
+                  {site.technologySignal ? technologySignalLabel(site.technologySignal) : 'Technology not detected'}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-muted">TLD</dt>
+                <dd className="font-mono text-text">{displayTld(site)}</dd>
+              </div>
+              <div>
+                <dt className="text-muted">HTTP status</dt>
+                <dd className="font-mono text-text">{site.httpStatus == null ? 'Not available' : site.httpStatus}</dd>
+              </div>
             </dl>
             <p className="mt-4 text-sm text-muted">
               Confirmed live is the date the homepage was reachable in the index, not an official launch date.
@@ -109,8 +110,11 @@ export function ToolPage() {
               {site.url ? (
                 <a className="btn btn-primary" href={site.url} target="_blank" rel="noreferrer">
                   Open site
+                  <span className="sr-only"> (leaves AI Radar)</span>
                 </a>
-              ) : null}
+              ) : (
+                <p className="self-center text-sm text-muted">Website unavailable</p>
+              )}
             </div>
           </div>
         ) : null}

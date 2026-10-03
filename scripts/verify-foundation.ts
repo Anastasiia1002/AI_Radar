@@ -118,7 +118,12 @@ function assertComparisonNotes(): void {
   assert.equal(bars[0]?.width, 100)
   assert.equal(bars[1]?.width, 25)
   assert.equal(Math.round(bars[0]?.listedShare ?? 0), 80)
-  assert.equal(nicheExplorePath('Image Generation'), '/explore?niche=Image+Generation')
+  assert.equal(nicheExplorePath('Image Generation'), '/explore?ai_categories=Image+Generation')
+  assert.equal(
+    urlToFilterState(new URLSearchParams('q=agents&ai_categories=AI+Agents+%26+Autonomous')).niche,
+    'AI Agents & Autonomous',
+  )
+  assert.equal(urlToFilterState(new URLSearchParams('niche=Image+Generation')).niche, 'Image Generation')
   assert.deepEqual(
     sharedCategoryNames([
       siteFixture('a.example', { categories: ['Image Generation', 'Agents'] }),

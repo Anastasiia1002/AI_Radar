@@ -85,7 +85,7 @@ export function urlToFilterState(params: { get(name: string): string | null }): 
 
   return {
     query,
-    niche: cleanNiche(params.get('niche')),
+    niche: cleanNiche(params.get('ai_categories') ?? params.get('niche')),
     domainRatingMin: parseDrMin(params.get('dr')),
     confirmedLiveAfter: normalizeDate(params.get('after')),
     sort: sort === 'relevance' && query === '' ? 'discovered' : sort,
@@ -117,7 +117,7 @@ export function filterStateToUrlSearch(state: FilterState): string {
   const q = state.query.trim()
   if (q) query.set('q', q)
   const niche = cleanNiche(state.niche)
-  if (niche) query.set('niche', niche)
+  if (niche) query.set('ai_categories', niche)
   if (state.sort !== 'discovered') query.set('sort', state.sort)
   if (state.domainRatingMin != null && state.domainRatingMin >= 0 && state.domainRatingMin <= 100) {
     query.set('dr', String(Math.round(state.domainRatingMin)))
